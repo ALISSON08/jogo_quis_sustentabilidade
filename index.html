@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo de Perguntas sobre Sustentabilidade</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  #game-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+  }
+  .question-section, .ranking-section, .tips-section {
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #388e3c;
+  }
+  .answers button {
+    margin: 5px;
+  }
+  #ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  #ranking-table th, #ranking-table td {
+    padding: 10px;
+    border: 1px solid #c8e6c9;
+  }
+  #ranking-table th {
+    background-color: #a5d6a7;
+  }
+  .tips-section {
+    background-color: #e0f7fa;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  .tips-section h3 {
+    margin-top: 0;
+  }
+  .tips-section ul {
+    list-style-type: decimal;
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+<div id="game-container">
+  <h1>Jogo de Perguntas sobre Sustentabilidade</h1>
+  
+  <!-- Seção de perguntas -->
+  <div class="question-section" style="display: none;">
+    <h2 id="question-text">Pergunta aparecerá aqui</h2>
+    <div class="answers">
+      <button onclick="checkAnswer(0)">Sim</button>
+      <button onclick="checkAnswer(1)">Não</button>
+      <button onclick="checkAnswer(2)" style="display: none;">Opção 3</button>
+      <button onclick="checkAnswer(3)" style="display: none;">Opção 4</button>
+    </div>
+  </div>
+  
+  <!-- Seção de ranking -->
+  <div class="ranking-section">
+    <h2>Ranking</h2>
+    <table id="ranking-table">
+      <tr>
+        <th>Jogador</th>
+        <th>Pontuação</th>
+      </tr>
+    </table>
+  </div>
+  <button id="start-btn" onclick="startGame()">Começar Jogo</button>
+  
+  <!-- Seção de dicas -->
+  <div class="tips-section" style="display: none;">
+    <h3>10 Ações Simples para Ajudar o Planeta</h3>
+    <ul>
+      <li>Tire da tomada os eletrônicos</li>
+      <li>Troque as lâmpadas incandescentes por lâmpadas econômicas</li>
+      <li>Use sua ecobag para carregar as compras do supermercado</li>
+      <li>Evite comprar garrafas plásticas, reutilize uma várias vezes</li>
+      <li>Use pilhas recarregáveis</li>
+      <li>Pegue carona, use bicicleta</li>
+      <li>Incentive as pessoas a fazer boas ações</li>
+      <li>Separe o lixo</li>
+      <li>Tome banho de no máximo 5 minutos</li>
+      <li>Desligue o computador quando for dormir</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  const perguntas = {
+    nivel1: [
+      { pergunta: "Você separa o lixo reciclável do lixo comum?", respostaCorreta: 0 },
+      { pergunta: "Você usa sacolas reutilizáveis para compras?", respostaCorreta: 0 },
+      { pergunta: "Você desliga as luzes quando não está usando?", respostaCorreta: 0 },
+      { pergunta: "Você usa transporte público ou bicicleta para se deslocar?", respostaCorreta: 0 },
+      { pergunta: "Você reduziu o uso de plásticos descartáveis?", respostaCorreta: 0 },
+      { pergunta: "Você já reduziu o uso de papel?", respostaCorreta: 0 },
+      { pergunta: "Você usa produtos de limpeza ecológicos?", respostaCorreta: 0 },
+      { pergunta: "Você apoia organizações ambientais?", respostaCorreta: 0 },
+      { pergunta: "Você participa de ações de voluntariado ambiental?", respostaCorreta: 0 },
+      { pergunta: "Você já mudou seus hábitos para reduzir o carbono?", respostaCorreta: 0 },
+      { pergunta: "Você acha que o meio ambiente é importante para a saúde humana?", respostaCorreta: 0 },
+      { pergunta: "Você acredita que as ações individuais podem impactar o meio ambiente?", respostaCorreta: 0 },
+      { pergunta: "Você considera o impacto ambiental ao fazer compras?", respostaCorreta: 0 },
+      { pergunta: "Você acha que a educação ambiental é importante?", respostaCorreta: 0 },
+      { pergunta: "Você se sente responsável por proteger o meio ambiente?", respostaCorreta: 0 }
+    ],
+    nivel2: [
+      { pergunta: "O que é o aquecimento global?", respostas: ["Aumento da temperatura da Terra", "Redução da camada de ozônio", "Poluição dos oceanos", "Aumento da biodiversidade"], respostaCorreta: 0 },
+      { pergunta: "Qual é o principal causador da poluição do ar?", respostas: ["Indústria", "Desmatamento", "Agricultura", "Reciclagem"], respostaCorreta: 0 },
+      { pergunta: "O que é a reciclagem?", respostas: ["Reutilização de materiais", "Descarte de lixo", "Aumento do lixo", "Produção de energia"], respostaCorreta: 0 },
+      { pergunta: "Qual é o objetivo da coleta seletiva?", respostas: ["Separar resíduos para reciclagem", "Aumentar lixo", "Criar mais aterros", "Reduzir água"], respostaCorreta: 0 },
+      { pergunta: "O que é o ciclo do carbono?", respostas: ["Circulação do carbono na natureza", "Processo de reciclagem", "Aquecimento global", "Destruição da camada de ozônio"], respostaCorreta: 0 },
+      { pergunta: "Qual é a principal fonte de água doce no planeta?", respostas: ["Rios e lagos", "Oceanos", "Águas subterrâneas", "Marés"], respostaCorreta: 2 },
+      { pergunta: "O que é a biodiversidade?", respostas: ["Variedade de vida na Terra", "Quantidade de CO2", "Concentração de oxigênio", "Quantidade de água doce"], respostaCorreta: 0 },
+      { pergunta: "Qual é o papel das florestas no equilíbrio do clima?", respostas: ["Produzir oxigênio e absorver CO2", "Produzir poluição", "Aumentar o desmatamento", "Criar energia elétrica"], respostaCorreta: 0 },
+      { pergunta: "O que é o ciclo da água?", respostas: ["Movimento contínuo da água", "Destruição dos recursos hídricos", "Evaporação de CO2", "Redução de biodiversidade"], respostaCorreta: 0 },
+      { pergunta: "Qual é o impacto da pesca excessiva nos oceanos?", respostas: ["Diminuição das populações de peixes", "Aumento da biodiversidade", "Recuperação dos oceanos", "Nenhum impacto"], respostaCorreta: 0 }
+    ]
+  };
+
+  let pontuacao = 0;
+  let perguntaAtual = 0;
+  let nivelAtual = 'nivel1';
+
+  function startGame() {
+    document.getElementById('start-btn').style.display = 'none';
+    document.querySelector('.question-section').style.display = 'block';
+    document.querySelector('.tips-section').style.display = 'none';
+    mostrarPergunta();
+  }
+
+  function mostrarPergunta() {
+    const perguntaObj = perguntas[nivelAtual][perguntaAtual];
+    document.getElementById('question-text').innerText = perguntaObj.pergunta;
+
+    const botoesRespostas = document.querySelectorAll('.answers button');
+    botoesRespostas.forEach((botao, i) => {
+      botao.innerText = nivelAtual === 'nivel1' ? (i === 0 ? "Sim" : "Não") : perguntaObj.respostas[i];
+      botao.style.display = i < (nivelAtual === 'nivel1' ? 2 : 4) ? 'inline-block' : 'none';
+    });
+  }
+
+  function checkAnswer(indice) {
+    const perguntaObj = perguntas[nivelAtual][perguntaAtual];
+    if (indice === perguntaObj.respostaCorreta) pontuacao++;
+
+    perguntaAtual++;
+    if (perguntaAtual < perguntas[nivelAtual].length) {
+      mostrarPergunta();
+    } else {
+      if (nivelAtual === 'nivel1') {
+        nivelAtual = 'nivel2';
+        perguntaAtual = 0;
+        mostrarPergunta();
+      } else {
+        fimDeJogo();
+      }
+    }
+  }
+
+  function fimDeJogo() {
+    const ranking = document.getElementById('ranking-table');
+    const linha = ranking.insertRow();
+    linha.insertCell(0).innerText = "Jogador";
+    linha.insertCell(1).innerText = pontuacao;
+
+    document.querySelector('.question-section').style.display = 'none';
+    document.getElementById('start-btn').style.display = 'block';
+    document.querySelector('.tips-section').style.display = 'block';
+    pontuacao = 0;
+    perguntaAtual = 0;
+    nivelAtual = 'nivel1';
+  }
+</script>
+</body>
+</html>
